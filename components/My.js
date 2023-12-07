@@ -18,155 +18,216 @@ const App = () => {
     <>
       <ImageBackground source={require("../assets/bj.png")} style={{ flex: 1 }}>
 
-<View style={{ flex: 1, alignItems:"center", justifyContent:"center" }}>
-  <View style={styles.gridContainer}>
+        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+          <View style={styles.gridContainer}>
 
-    {Array.from({ length: numRows }).map((_, rowIndex) => (
-      <View key={rowIndex} style={styles.gridRow}>
-        {Array.from({ length: numCols }).map((_, colIndex) => (
-          <View
-            key={colIndex}
-            style={[
-              styles.gridCell,
-              isStarCell(rowIndex, colIndex) && styles.starCell,
-              { backgroundColor: isCellColored(rowIndex, colIndex) },
-              isCellInRange6(rowIndex, colIndex) ? styles.red
-                : null,
-              isCellInRange9(rowIndex, colIndex) ? styles.green
-                : null,
-              isCellInRange7(rowIndex, colIndex) ? styles.blue
-                : null,
-              isCellInRange8(rowIndex, colIndex)
-                ? styles.yellow
-                : null,
+            {Array.from({ length: numRows }).map((_, rowIndex) => (
+              <View key={rowIndex} style={styles.gridRow}>
+                {Array.from({ length: numCols }).map((_, colIndex) => (
+                  <View
+                    key={colIndex}
+                    style={[
+                      styles.gridCell,
+                      isStarCell(rowIndex, colIndex) && styles.starCell,
+                      { backgroundColor: isCellColored(rowIndex, colIndex) },
+                      isCellInRange6(rowIndex, colIndex) ? styles.red
+                        : null,
+                      isCellInRange9(rowIndex, colIndex) ? styles.green
+                        : null,
+                      isCellInRange7(rowIndex, colIndex) ? styles.blue
+                        : null,
+                      isCellInRange8(rowIndex, colIndex)
+                        ? styles.yellow
+                        : null,
 
-              isCellInRange10(rowIndex, colIndex) ? styles.home
-                : null,
+                      isCellInRange10(rowIndex, colIndex) ? styles.home
+                        : null,
 
-              ,
+                      ,
 
-              removeInnerCellGrid(rowIndex, colIndex) ? styles.removeGrid
-                : null,
+                      removeInnerCellGrid(rowIndex, colIndex) ? styles.removeGrid
+                        : null,
 
-            ]}
-          >
-
-
+                    ]}
+                  >
 
 
+                    <Text style={{ width: "23", height: "25", justifyContent: "center", alignItems: "center" }}> {isStarCell(rowIndex, colIndex) && (
+                      <Ionicons name="star" size={14} color="white" />
+                    )}</Text>
 
 
+                    {isRedCircleCell(rowIndex + 1, colIndex + 1) && (
+                      <View style={styles.circle} />
+                    )}
+                    {isGreenCircleCell(rowIndex + 1, colIndex + 1) && (
+                      <View style={[styles.circle, { backgroundColor: "#01A147" }]} />
+                    )}
 
+                    {isYellowCircleCell(rowIndex + 1, colIndex + 1) && (
+                      <View style={[styles.circle, { backgroundColor: "#ffe01b" }]} />
+                    )}
 
-
-
-
-
-            <Text style={{ width: "23", height: "25", justifyContent: "center", alignItems: "center" }}> {isStarCell(rowIndex, colIndex) && (
-              <Ionicons name="star" size={14} color="white" />
-            )}</Text>
-
-
-
-
-
-            {isRedCircleCell(rowIndex + 1, colIndex + 1) && (
-              <View style={styles.circle} />
-            )}
-            {isGreenCircleCell(rowIndex + 1, colIndex + 1) && (
-              <View style={[styles.circle, { backgroundColor: "#01A147" }]} />
-            )}
-
-            {isYellowCircleCell(rowIndex + 1, colIndex + 1) && (
-              <View style={[styles.circle, { backgroundColor: "#ffe01b" }]} />
-            )}
-
-            {isBlueCircleCell(rowIndex + 1, colIndex + 1) && (
-              <View style={[styles.circle, { backgroundColor: "#29b6f6" }]} />
-            )}
+                    {isBlueCircleCell(rowIndex + 1, colIndex + 1) && (
+                      <View style={[styles.circle, { backgroundColor: "#29b6f6" }]} />
+                    )}
 
 
 
-            {redArrowCell(rowIndex, colIndex) && (
+                    {redArrowCell(rowIndex, colIndex) && (
 
 
-              <Entypo name="arrow-long-right" size={20} color="red" style={{ marginTop: -16 }} />
+                      <Entypo name="arrow-long-right" size={20} color="red" style={{ marginTop: -16 }} />
 
 
-            )}
+                    )}
 
-            {greenArrowCell(rowIndex, colIndex) && (
-
-
-              <Entypo name="arrow-long-down" size={20} color="green" style={{ marginTop: -16 }} />
+                    {greenArrowCell(rowIndex, colIndex) && (
 
 
-            )}
-
-            {yellowArrowCell(rowIndex, colIndex) && (
+                      <Entypo name="arrow-long-down" size={20} color="green" style={{ marginTop: -16 }} />
 
 
-              <Entypo name="arrow-long-left" size={20} color="#ffe01b" style={{ marginTop: -16 }} />
+                    )}
+
+                    {yellowArrowCell(rowIndex, colIndex) && (
 
 
-            )}
-
-            {blueArrowCell(rowIndex, colIndex) && (
+                      <Entypo name="arrow-long-left" size={20} color="#ffe01b" style={{ marginTop: -16 }} />
 
 
-              <Entypo name="arrow-long-up" size={20} color="#29b6f6" style={{ marginTop: -16 }} />
+                    )}
+
+                    {blueArrowCell(rowIndex, colIndex) && (
 
 
-            )}
-
-{renderHomeText(rowIndex , colIndex )}
-            
+                      <Entypo name="arrow-long-up" size={20} color="#29b6f6" style={{ marginTop: -16 }} />
 
 
+                    )}
+
+                    {renderHomeText(rowIndex, colIndex)}
 
 
 
+                  </View>
 
+
+
+                ))}
+
+              </View>
+            ))}
           </View>
 
 
+        </View>
 
-        ))}
 
-      </View>
-    ))}
+<View style={styles.redGotiBox}></View>
+<View style={styles.greenGotiBox}></View>
+<View style={styles.blueGotiBox}></View>
+<View style={styles.yellowGotiBox}></View>
+
+
+        <View style={styles.redDice}>
+          <TouchableOpacity style={styles.diceBtn1}><MaterialCommunityIcons name="dice-1" size={49} color="#fdfffc" /></TouchableOpacity>
+        </View>
+
+
+
+        <View style={styles.greenDice}><TouchableOpacity style={styles.diceBtn2}></TouchableOpacity></View>
+        <View style={styles.blueDice}>
+          <TouchableOpacity style={styles.diceBtn3}></TouchableOpacity>
+        </View>
+        <View style={styles.yellowDice}>
+          <TouchableOpacity style={styles.diceBtn4}></TouchableOpacity>
+        </View>
+
+
+
+
+
+<View style={{width:76, height:75, position:"absolute", top:"45%", left:"40%"}}>
+
+  <View style={{width: 0,
+    height: 0,
+    backgroundColor: "transparent",
+    borderStyle: "solid",
+    borderLeftWidth: 38,
+    borderRightWidth: 39,
+    borderBottomWidth: 38,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderBottomColor: "#ec1d27",
+    transform: [{ rotate: "90deg" }],
+    top:18,
+    left:-18
+   }}>
   </View>
 
 
+  <View style={{width: 0,
+    height: 0,
+    backgroundColor: "transparent",
+    borderStyle: "solid",
+    borderLeftWidth: 38,
+    borderRightWidth: 39,
+    borderBottomWidth: 38,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderBottomColor: "#ffe01b",
+    transform: [{ rotate: "-90deg" }],
+    top:-20,
+    right:-19
+   }}>
+  </View>
+
+
+  <View style={{width: 0,
+    height: 0,
+    backgroundColor: "transparent",
+    borderStyle: "solid",
+    borderLeftWidth: 38,
+    borderRightWidth: 40 ,
+    borderBottomWidth: 38,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderBottomColor: "#29b6f6",
+    // transform: [{ rotate: "0deg" }],
+    top:-39,
+    left:0
+   }}>
+  </View>
+
+
+
+  <View style={{width: 0,
+    height: 0,
+    backgroundColor: "transparent",
+    borderStyle: "solid",
+    borderLeftWidth: 38,
+    borderRightWidth: 37,
+    borderBottomWidth: 38,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderBottomColor: "#01A147",
+    transform: [{ rotate: "-180deg" }],
+    top:-114,
+    left:1
+   }}>
+  </View>
+
 </View>
-
-
-<View style={styles.redDice}>
-<TouchableOpacity style={styles.diceBtn1}><MaterialCommunityIcons name="dice-1" size={49} color="#fdfffc" /></TouchableOpacity>
-</View>
-
-
-
-<View style={styles.greenDice}><TouchableOpacity style={styles.diceBtn2}></TouchableOpacity></View>
-<View style={styles.blueDice}>
-<TouchableOpacity style={styles.diceBtn3}></TouchableOpacity>
-</View>
-<View style={styles.yellowDice}>
-<TouchableOpacity style={styles.diceBtn4}></TouchableOpacity>
-</View>
-
-
-
-
 
 
       </ImageBackground>
 
 
 
-  
+
     </>
-  
+
 
 
 
@@ -215,7 +276,7 @@ const isCellInRange9 = (row, col) => {
 
 const removeInnerCellGrid = (row, col) => {
 
-  if (row >= 1 && row <= 4 && col >= 1 && col <= 4 || row >= 1 && row <= 4 && col >= 10 && col <= 13 || row >= 10 && row <= 13 && col >= 10 && col <= 13 || row >= 10 && row <= 13 && col >= 1 && col <= 4  ||row >= 6 && row <= 8 && col >= 6 && col <= 8 ) {
+  if (row >= 1 && row <= 4 && col >= 1 && col <= 4 || row >= 1 && row <= 4 && col >= 10 && col <= 13 || row >= 10 && row <= 13 && col >= 10 && col <= 13 || row >= 10 && row <= 13 && col >= 1 && col <= 4 || row >= 6 && row <= 8 && col >= 6 && col <= 8) {
     return true;
   }
 };
@@ -380,7 +441,7 @@ const isHomeCell = (row, col) => {
 const renderHomeText = (row, col) => {
   if (row === 7 && col === 7) {
     // Center cell
-    return <Text style={{ color: 'black', fontSize: 9, fontWeight: 'bold', marginTop:-20 }}>HOME</Text>;
+    return <Text style={{ color: 'black', fontSize: 9, fontWeight: 'bold', marginTop: -20 }}>HOME</Text>;
   }
   // return null;
 };
@@ -458,104 +519,163 @@ const styles = StyleSheet.create({
 
   },
 
-
-  redDice:{
-    height:65,
-    width:65,
-    backgroundColor:"#6da6c0",
-    position:"absolute",
-    top:105,
-    left:78,
-    alignItems:"center",
-    justifyContent:"center",
-    borderColor:"#f9e7b0",
-    borderWidth:1,
-    borderRadius:8
+  redGotiBox:{
+    height: 55,
+    width: 62,
+    backgroundColor: "#6da6c0",
+    position: "absolute",
+    top: 110,
+    left: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#f9e7b0",
+    borderWidth: 1,
+    borderRadius: 8 
   },
 
-  diceBtn1 :{
-     height:55,
-     width:55,
-     backgroundColor:"#ffc3c3",
-     borderRadius:10,
-     alignItems:"center",
-     justifyContent:"center"
+  greenGotiBox:{
+    height: 55,
+    width: 62,
+    backgroundColor: "#6da6c0",
+    position: "absolute",
+    top: 108,
+    right: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#f9e7b0",
+    borderWidth: 1,
+    borderRadius: 8 
   },
 
-  greenDice:{
-    height:65,
-    width:65,
-    backgroundColor:"#6da6c0",
-    position:"absolute",
-    top:105,
-    right:78,
-    alignItems:"center",
-    justifyContent:"center",
-    borderColor:"#f9e7b0",
-    borderWidth:1,
-    borderRadius:8
+
+  yellowGotiBox:{
+    height: 55,
+    width: 62,
+    backgroundColor: "#6da6c0",
+    position: "absolute",
+    bottom: 115,
+    right: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#f9e7b0",
+    borderWidth: 1,
+    borderRadius: 8 
   },
 
-  diceBtn2 :{
-    height:55,
-     width:55,
-    backgroundColor:"#ffc3c3",
-    borderRadius:10,
-    alignItems:"center",
-    justifyContent:"center"
- },
+  blueGotiBox:{
+    height: 55,
+    width: 62,
+    backgroundColor: "#6da6c0",
+    position: "absolute",
+    bottom: 115,
+    left: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#f9e7b0",
+    borderWidth: 1,
+    borderRadius: 8 
+  },
 
 
- blueDice:{
-  height:65,
-  width:65,
-  backgroundColor:"#6da6c0",
-  position:"absolute",
-  bottom:110,
-  left:78,
-  alignItems:"center",
-  justifyContent:"center",
-  borderColor:"#f9e7b0",
-  borderWidth:1,
-  borderRadius:8
-},
 
- diceBtn3 :{
-  height:55,
-  width:55,
- backgroundColor:"#ffc3c3",
-  borderRadius:10,
-  alignItems:"center",
-  justifyContent:"center"
-},
+  redDice: {
+    height: 65,
+    width: 65,
+    backgroundColor: "#6da6c0",
+    position: "absolute",
+    top: 105,
+    left: 78,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#f9e7b0",
+    borderWidth: 1,
+    borderRadius: 8
+  },
 
-yellowDice:{
-  height:65,
-  width:65,
-  backgroundColor:"#6da6c0",
-  position:"absolute",
-  bottom:110,
-  right:78,
-  alignItems:"center",
-  justifyContent:"center",
-  borderColor:"#f9e7b0",
-  borderWidth:1,
-  borderRadius:8
-},
+  diceBtn1: {
+    height: 55,
+    width: 55,
+    backgroundColor: "#ffc3c3",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center"
+  },
 
-diceBtn4 :{
-  height:55,
-  width:55,
- backgroundColor:"#ffc3c3",
-  borderRadius:10,
-  alignItems:"center",
-  justifyContent:"center"
-},
 
-// home:{
-//   backgroundColor:"#252422",
-//   borderColor:"#252422"
-// }
+  greenDice: {
+    height: 65,
+    width: 65,
+    backgroundColor: "#6da6c0",
+    position: "absolute",
+    top: 105,
+    right: 78,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#f9e7b0",
+    borderWidth: 1,
+    borderRadius: 8
+  },
+
+  diceBtn2: {
+    height: 55,
+    width: 55,
+    backgroundColor: "#ffc3c3",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
+
+  blueDice: {
+    height: 65,
+    width: 65,
+    backgroundColor: "#6da6c0",
+    position: "absolute",
+    bottom: 110,
+    left: 78,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#f9e7b0",
+    borderWidth: 1,
+    borderRadius: 8
+  },
+
+  diceBtn3: {
+    height: 55,
+    width: 55,
+    backgroundColor: "#ffc3c3",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
+  yellowDice: {
+    height: 65,
+    width: 65,
+    backgroundColor: "#6da6c0",
+    position: "absolute",
+    bottom: 110,
+    right: 78,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#f9e7b0",
+    borderWidth: 1,
+    borderRadius: 8
+  },
+
+  diceBtn4: {
+    height: 55,
+    width: 55,
+    backgroundColor: "#ffc3c3",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
+  // home:{
+  //   backgroundColor:"#252422",
+  //   borderColor:"#252422"
+  // }
 
 
 

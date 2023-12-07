@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 
 const App = () => {
   return (
-    <SafeAreaView style={{flex:1, marginTop:32}}>
+    <SafeAreaView style={{flex:1, marginTop:30}}>
     <My></My>
     <StatusBar style="auto"></StatusBar>
     
