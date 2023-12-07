@@ -9,12 +9,7 @@ const GreenGoti = (props) => (
     xmlSpace="preserve"
     x="0%"
     y="0%"
-    // style={{
-    //   top: 5,
-    //   left: 1,
-    //   height: "12vw",
-    //   width: "12vw",
-    // }}
+ 
     viewBox="0 0 24 24"
     {...props}
   >

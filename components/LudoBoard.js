@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, StyleSheet, Text, ImageBackground, SafeAreaView, TouchableOpacity, Image, Platform, StatusBar } from 'react-native';
 import Svg, { Polygon } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,30 +10,35 @@ import RedGoti from './Svg/RedGoti';
 import GreenGoti from './Svg/GreenGoti';
 import YellowGoti from './Svg/YellowGoti';
 import BlueGoti from './Svg/BlueGoti';
+import HomeComponent from './HomeComponent';
 
 // <Ionicons name="md-location-sharp" size={24} color="black" />
 
-const App = () => {
+const LudoBoard = () => {
   const numRows = 15;
   const numCols = 15;
 
+  const [diceValue, setDiceValue] = useState(1);
+
+  const rollDice = () => {
+    
+    const randomValue = Math.floor(Math.random() * 6) + 1;
+    setDiceValue(randomValue);
+  };
+
+  
+  const renderDiceDots = () => {
+    const dots = [];
+    for (let i = 0; i < diceValue; i++) {
+      dots.push(<View key={i} style={styles.dot} />);
+    }
+    return dots;
+  };
+
   return (
 
-    <>
-     <SafeAreaView
-       
-        style={{
-          paddinTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-          flex: 1,
-          backgroundColor: "white",
-          
-        }}
-      >
-        <StatusBar
-          backgroundColor={"white"}
-          barStyle={"dark-content"}
-          translucent={false}
-        />
+    <View style={{flex:1, backgroundColor:"white"}}>
+    
 
 
 
@@ -52,8 +57,12 @@ const App = () => {
                       styles.gridCell,
                       isStarCell(rowIndex, colIndex) && styles.starCell,
                       { backgroundColor: isCellColored(rowIndex, colIndex) },
+                      removeInnerCellGrid(rowIndex, colIndex) ? styles.removeGrid
+                      : null,
+                  
                       isCellInRange6(rowIndex, colIndex) ? styles.red
                         : null,
+                        isCell(rowIndex , colIndex) && styles.demo,
                       isCellInRange9(rowIndex, colIndex) ? styles.green
                         : null,
                       isCellInRange7(rowIndex, colIndex) ? styles.blue
@@ -66,9 +75,7 @@ const App = () => {
                         : null,
 
                       ,
-
-                      removeInnerCellGrid(rowIndex, colIndex) ? styles.removeGrid
-                        : null,
+                  
 
                     ]}
                   >
@@ -128,7 +135,10 @@ const App = () => {
 
                     )}
 
-                    {renderHomeText(rowIndex, colIndex)}
+                    {/* {renderHomeText(rowIndex, colIndex)} */}
+
+
+                   { renderHomeComponent(rowIndex , colIndex)}
 
                     {renderRedGotiSvgIcon(rowIndex + 1 , colIndex + 1 )}
 
@@ -172,7 +182,13 @@ const App = () => {
 
 
         <View style={styles.redDice}>
-          <TouchableOpacity style={styles.diceBtn1}><MaterialCommunityIcons name="dice-1" size={49} color="#fdfffc" /></TouchableOpacity>
+          <TouchableOpacity style={styles.diceBtn1}>
+            {/* <MaterialCommunityIcons name="dice-1" size={49} color="#fdfffc" /> */}
+            <TouchableOpacity onPress={rollDice} style={styles.dice}>
+          {renderDiceDots()}
+      </TouchableOpacity>
+            </TouchableOpacity>
+
         </View>
 
 
@@ -189,7 +205,7 @@ const App = () => {
 
 
 
-<View style={{width:76, height:75, position:"absolute", top:"45%", left:"40%"}}>
+{/* <View style={{width:76, height:75, position:"absolute", top:"45%", left:"40%"}}>
 
   <View style={{width: 0,
     height: 0,
@@ -255,7 +271,7 @@ const App = () => {
    }}>
   </View>
 
-</View>
+</View> */}
 
 
  </ImageBackground>
@@ -264,8 +280,8 @@ const App = () => {
 
 
 
-</SafeAreaView>
-    </>
+
+    </View>
 
 
 
@@ -283,11 +299,11 @@ const isCellInRange5 = (row, col) => {
 const isCellInRange6 = (row, col) => {
 
   if (row === 5 && col >= 0 && col <= 5 || row === 0 && col >= 0 && col <= 5 || col === 0 && row >= 0 && row <= 5 || col === 5 && row >= 0 && row <= 5) {
-    return '#ec1d27';
+    return true;
   }
 };
 
-// blue box order
+// blue box border
 const isCellInRange7 = (row, col) => {
 
   if (row === 9 && col >= 0 && col <= 5 || row === 14 && col >= 0 && col <= 5 || col === 5 && row >= 9 && row <= 14 || col === 0 && row >= 9 && row <= 14) {
@@ -295,7 +311,7 @@ const isCellInRange7 = (row, col) => {
   }
 };
 
-// yellow box order
+// yellow box border
 const isCellInRange8 = (row, col) => {
 
   if (row === 9 && col >= 9 && col <= 14 || row === 14 && col >= 9 && col <= 14 || col === 9 && row >= 9 && row <= 14 || col === 14 && row >= 9 && row <= 14) {
@@ -303,7 +319,7 @@ const isCellInRange8 = (row, col) => {
   }
 };
 
-// green box order
+// green box border
 const isCellInRange9 = (row, col) => {
 
   if (row === 0 && col >= 9 && col <= 14 || row === 5 && col >= 9 && col <= 14 || col === 9 && row >= 0 && row <= 5 || col === 14 && row >= 0 && row <= 5) {
@@ -311,7 +327,7 @@ const isCellInRange9 = (row, col) => {
   }
 };
 
-//remove inner grid
+//remove inner cell grid
 
 const removeInnerCellGrid = (row, col) => {
 
@@ -350,8 +366,6 @@ const isStarCell = (row, col) => {
 //red , green, yellow, blue cell for goti
 const isCellColored = (row, col) => {
   // Red cells
-
-
   if (row === 6 && col === 1 || row === 7 && col >= 1 && col <= 5 || row === 2 && col === 6) {
     return '#ec1d27';
   }
@@ -370,6 +384,8 @@ const isCellColored = (row, col) => {
   return 'transparent';
 };
 
+
+// circle design
 
 const isRedCircleCell = (row, col) => {
   const circleCells = [
@@ -486,7 +502,7 @@ const renderHomeText = (row, col) => {
 };
 
 
-
+//svg goti
 const isRedGotiTargetCell = (row, col) => {
   return (row === 2 && col === 2) || (row === 2 && col === 4) || (row === 4 && col === 2) || (row === 4 && col === 4);
 };
@@ -542,6 +558,26 @@ const renderBlueGotiSvgIcon = (row, col) => {
   return null;
 };
 
+// homebox design
+const isHomeTargetCell = (row, col) => {
+  return (row === 6 && col === 6) 
+};
+
+const renderHomeComponent = (row, col) => {
+  if (isHomeTargetCell(row, col)) {
+    return (
+   <HomeComponent></HomeComponent>
+   
+    );
+  }
+  return null;
+};
+
+const isCell = (row,col) =>{
+  if (row === 5 && col === 0) {
+    return true;
+  }
+}
 
 
 
@@ -552,13 +588,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: "white",
-
-
-
+  
   },
   gridRow: {
     flexDirection: 'row',
-    // backgroundColor:"white"
+    borderWidth:0,
+
+
+   
   },
   gridCell: {
     width: 25,
@@ -568,21 +605,26 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     aspectRatio: 1,
-    borderWidth: 1,
-    backgroundColor: "white"
-    // backgroundColor:"white"
+    // borderWidth: 1,
+  
 
   },
-  highlightedCell: {
-    backgroundColor: '#ffe01b', // Change the background color as needed
-  },
+  // highlightedCell: {
+  //   backgroundColor: '#ffe01b', // Change the background color as needed
+  // },
   removeGrid: {
-    borderWidth: 0
+    borderWidth: 0, 
+    borderBottomWidth:0,
+    borderTopWidth:0,
+    borderLeftWidth:0,
+    borderRightWidth:0 
   },
 
   red: {
     backgroundColor: '#ec1d27',
-    borderColor: "#ec1d27"
+    borderColor: "#ec1d27",
+    
+    
   },
   green: {
     backgroundColor: '#01A147',
@@ -598,10 +640,10 @@ const styles = StyleSheet.create({
     borderColor: "#29b6f6"
   },
 
-
   starCell: {
     backgroundColor: 'lightgray', // Background color for star cells
   },
+
   circle: {
     width: 25,
     height: 25,
@@ -611,9 +653,7 @@ const styles = StyleSheet.create({
     top: 15,
     left: 12,
     marginTop: 1,
-
   },
-
   redGotiBox:{
     height: 55,
     width: 62,
@@ -628,8 +668,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingRight:20
   },
-
-  greenGotiBox:{
+ greenGotiBox:{
     height: 55,
     width: 62,
     backgroundColor: "#6da6c0",
@@ -678,11 +717,11 @@ const styles = StyleSheet.create({
 
 
   redDice: {
-    height: 65,
-    width: 65,
+    height: 75,
+    width: 75,
     backgroundColor: "#6da6c0",
     position: "absolute",
-    top: 105,
+    top: 100,
     left: 78,
     alignItems: "center",
     justifyContent: "center",
@@ -692,8 +731,8 @@ const styles = StyleSheet.create({
   },
 
   diceBtn1: {
-    height: 55,
-    width: 55,
+    height: 65,
+    width: 65,
     backgroundColor: "#ffc3c3",
     borderRadius: 10,
     alignItems: "center",
@@ -723,9 +762,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-
-
-  blueDice: {
+blueDice: {
     height: 65,
     width: 65,
     backgroundColor: "#6da6c0",
@@ -771,10 +808,36 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
 
-  // home:{
-  //   backgroundColor:"#252422",
-  //   borderColor:"#252422"
-  // }
+ demo:{
+  borderColor:"#ec1d27",
+  borderWidth:1,
+  
+ },
+dice: {
+    height: 55,
+    width: 55,
+   justifyContent: 'center',
+  alignItems: 'center',
+  borderRadius: 10,
+  backgroundColor: "#fdfffc",
+  flexDirection:"row",
+  flexWrap:"wrap",
+  alignItems:"center",
+  gap:5,
+  padding:9,
+  justifyContent:"center"
+  
+},
+
+dot: {
+  width: 9.2,
+  height: 9.2,
+  backgroundColor: 'black',
+  borderRadius: 7.5,
+  // margin:5
+  
+
+},
 
 
 
@@ -797,7 +860,7 @@ const styles = StyleSheet.create({
 
 });
 
-export default App;
+export default LudoBoard;
 
 
 // remove the grid of these cells 1. (0,0) to (5,5)  2.(0,9) to (5,14)  3. (9,0) to (15,5)  4. (9,9) to (15,15)
@@ -830,3 +893,6 @@ export default App;
 //  design ludo home box excatly like a ludo king and ludo home box cells start from (6,6) to (8,8)
 
 //  how i want to place the svg icon on these top middle of the cells (2,2), (2,4), (4,2), (4,4)
+
+
+// how to create when user touch the dice it roll the dice and give some random no. between 1 to 6
