@@ -1,11 +1,15 @@
 import React from 'react';
-import { View, StyleSheet, Text, ImageBackground, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, Text, ImageBackground, SafeAreaView, TouchableOpacity, Image, Platform, StatusBar } from 'react-native';
 import Svg, { Polygon } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Arrow from './Svg/Arrow';
+import RedGoti from './Svg/RedGoti';
+import GreenGoti from './Svg/GreenGoti';
+import YellowGoti from './Svg/YellowGoti';
+import BlueGoti from './Svg/BlueGoti';
 
 // <Ionicons name="md-location-sharp" size={24} color="black" />
 
@@ -16,9 +20,27 @@ const App = () => {
   return (
 
     <>
+     <SafeAreaView
+       
+        style={{
+          paddinTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+          flex: 1,
+          backgroundColor: "white",
+          
+        }}
+      >
+        <StatusBar
+          backgroundColor={"white"}
+          barStyle={"dark-content"}
+          translucent={false}
+        />
+
+
+
       <ImageBackground source={require("../assets/bj.png")} style={{ flex: 1 }}>
 
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+   
           <View style={styles.gridContainer}>
 
             {Array.from({ length: numRows }).map((_, rowIndex) => (
@@ -108,13 +130,21 @@ const App = () => {
 
                     {renderHomeText(rowIndex, colIndex)}
 
+                    {renderRedGotiSvgIcon(rowIndex + 1 , colIndex + 1 )}
 
+                    {renderGreenGotiSvgIcon(rowIndex + 1 , colIndex + 1 )}
+
+                    {renderYellowGotiSvgIcon(rowIndex + 1 , colIndex + 1 )}
+
+                    {renderBlueGotiSvgIcon(rowIndex + 1 , colIndex + 1 )}
 
                   </View>
 
 
 
                 ))}
+
+
 
               </View>
             ))}
@@ -123,11 +153,22 @@ const App = () => {
 
         </View>
 
+<Arrow></Arrow>
 
-<View style={styles.redGotiBox}></View>
-<View style={styles.greenGotiBox}></View>
-<View style={styles.blueGotiBox}></View>
-<View style={styles.yellowGotiBox}></View>
+
+<View style={styles.redGotiBox}>
+
+  <RedGoti></RedGoti>
+</View>
+<View style={styles.greenGotiBox}>
+  <GreenGoti></GreenGoti>
+</View>
+<View style={styles.blueGotiBox}>
+  <BlueGoti></BlueGoti>
+</View>
+<View style={styles.yellowGotiBox}>
+  <YellowGoti></YellowGoti>
+</View>
 
 
         <View style={styles.redDice}>
@@ -161,11 +202,10 @@ const App = () => {
     borderRightColor: "transparent",
     borderBottomColor: "#ec1d27",
     transform: [{ rotate: "90deg" }],
-    top:18,
+    top:20,
     left:-18
    }}>
   </View>
-
 
   <View style={{width: 0,
     height: 0,
@@ -183,7 +223,6 @@ const App = () => {
    }}>
   </View>
 
-
   <View style={{width: 0,
     height: 0,
     backgroundColor: "transparent",
@@ -195,12 +234,10 @@ const App = () => {
     borderRightColor: "transparent",
     borderBottomColor: "#29b6f6",
     // transform: [{ rotate: "0deg" }],
-    top:-39,
+    top:-38,
     left:0
    }}>
   </View>
-
-
 
   <View style={{width: 0,
     height: 0,
@@ -213,7 +250,7 @@ const App = () => {
     borderRightColor: "transparent",
     borderBottomColor: "#01A147",
     transform: [{ rotate: "-180deg" }],
-    top:-114,
+    top:-113.3,
     left:1
    }}>
   </View>
@@ -221,11 +258,13 @@ const App = () => {
 </View>
 
 
-      </ImageBackground>
+ </ImageBackground>
+
+   
 
 
 
-
+</SafeAreaView>
     </>
 
 
@@ -448,6 +487,62 @@ const renderHomeText = (row, col) => {
 
 
 
+const isRedGotiTargetCell = (row, col) => {
+  return (row === 2 && col === 2) || (row === 2 && col === 4) || (row === 4 && col === 2) || (row === 4 && col === 4);
+};
+
+const renderRedGotiSvgIcon = (row, col) => {
+  if (isRedGotiTargetCell(row, col)) {
+    return (
+     <RedGoti></RedGoti>
+    );
+  }
+  return null;
+};
+
+
+const isGreenGotiTargetCell = (row, col) => {
+  return (row === 2 && col === 11) || (row === 2 && col === 13) || (row === 4 && col === 11) || (row === 4 && col === 13);
+};
+
+const renderGreenGotiSvgIcon = (row, col) => {
+  if (isGreenGotiTargetCell(row, col)) {
+    return (
+     <GreenGoti></GreenGoti>
+    );
+  }
+  return null;
+};
+
+
+const isYellowGotiTargetCell = (row, col) => {
+  return (row === 11 && col === 11) || (row === 11 && col === 13) || (row === 13 && col === 11) || (row === 13 && col === 13);
+};
+
+const renderYellowGotiSvgIcon = (row, col) => {
+  if (isYellowGotiTargetCell(row, col)) {
+    return (
+     <YellowGoti></YellowGoti>
+    );
+  }
+  return null;
+};
+
+
+const isBlueGotiTargetCell = (row, col) => {
+  return (row === 11 && col === 2) || (row === 11 && col === 4) || (row === 13 && col === 2) || (row === 13 && col === 4);
+};
+
+const renderBlueGotiSvgIcon = (row, col) => {
+  if (isBlueGotiTargetCell(row, col)) {
+    return (
+     <BlueGoti></BlueGoti>
+    );
+  }
+  return null;
+};
+
+
 
 
 
@@ -530,7 +625,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderColor: "#f9e7b0",
     borderWidth: 1,
-    borderRadius: 8 
+    borderRadius: 8,
+    paddingRight:20
   },
 
   greenGotiBox:{
@@ -544,7 +640,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderColor: "#f9e7b0",
     borderWidth: 1,
-    borderRadius: 8 
+    borderRadius: 8 ,
+    paddingRight:20
   },
 
 
@@ -559,7 +656,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderColor: "#f9e7b0",
     borderWidth: 1,
-    borderRadius: 8 
+    borderRadius: 8 ,
+    paddingRight:20
   },
 
   blueGotiBox:{
@@ -573,7 +671,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderColor: "#f9e7b0",
     borderWidth: 1,
-    borderRadius: 8 
+    borderRadius: 8 ,
+    paddingRight:20
   },
 
 
@@ -729,3 +828,5 @@ export default App;
 // break the home cell (6,6) to (8,8) into four parts and give the four different background color
 
 //  design ludo home box excatly like a ludo king and ludo home box cells start from (6,6) to (8,8)
+
+//  how i want to place the svg icon on these top middle of the cells (2,2), (2,4), (4,2), (4,4)
