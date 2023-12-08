@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { View, StyleSheet, Text, ImageBackground, SafeAreaView, TouchableOpacity, Image, Platform, StatusBar } from 'react-native';
+import React, {useState, useRef, useEffect} from 'react';
+import { View, StyleSheet, Text, ImageBackground, SafeAreaView, TouchableOpacity, Image, Platform, StatusBar, Animated } from 'react-native';
 import Svg, { Polygon } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -11,37 +11,212 @@ import GreenGoti from './Svg/GreenGoti';
 import YellowGoti from './Svg/YellowGoti';
 import BlueGoti from './Svg/BlueGoti';
 import HomeComponent from './HomeComponent';
+// import * as Animatable from 'react-native-animatable';
+import { Audio } from 'expo-av';
+import ReadyRed from './Svg/ReadyRed';
+import SvgComponent from './Svg/ReadyRed';
 
-// <Ionicons name="md-location-sharp" size={24} color="black" />
+
 
 const LudoBoard = () => {
   const numRows = 15;
   const numCols = 15;
 
   const [diceValue, setDiceValue] = useState(1);
+  const rollingValue = useRef(new Animated.Value(0)).current;
 
-  const rollDice = () => {
-    
-    const randomValue = Math.floor(Math.random() * 6) + 1;
-    setDiceValue(randomValue);
+  const [tappedRedGoti, setTappedRedGoti] = useState(null);
+
+  const [rolling, setRolling] = useState(false);
+  const diceRef = useRef(null);
+  const rollingSound = useRef(new Audio.Sound());
+
+ 
+
+  useEffect(() => {
+    loadSound();
+
+    return () => {
+ 
+      unloadSound();
+    };
+  }, []);
+
+  const loadSound = async () => {
+    try {
+      await rollingSound.current.loadAsync(require('../assets/diceSound.mp3'));
+    } catch (error) {
+      console.error('Failed to load the sound', error);
+    }
   };
+
+  const unloadSound = async () => {
+    try {
+      await rollingSound.current.unloadAsync();
+    } catch (error) {
+      console.error('Failed to unload the sound', error);
+    }
+  };
+
+  const rollDice = async () => {
+
+    try {
+      await rollingSound.current.replayAsync();
+    } catch (error) {
+      console.error('Failed to play the sound', error);
+    }
+
+
+    // setRolling(true);
+
+   
+    // await new Promise(resolve => setTimeout(resolve, 1500));
+   
+    // const randomValue = Math.floor(Math.random() * 6) + 1;
+    // setDiceValue(randomValue)
 
   
-  const renderDiceDots = () => {
-    const dots = [];
-    for (let i = 0; i < diceValue; i++) {
-      dots.push(<View key={i} style={styles.dot} />);
-    }
-    return dots;
+
+    // setRolling(false);
+
+    const randomValue = Math.floor(Math.random() * 6) + 1;
+    setDiceValue(randomValue);
+
+    rollingValue.setValue(0);
+    Animated.timing(rollingValue, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
   };
+
+ 
+  const rollingRotation = rollingValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  const renderDiceIcons = () => {
+    console.log(diceValue)
+   if ( diceValue == 1) {
+    return <FontAwesome5 name="dice-one" size={54} color="#fdfffc"/>
+   }
+
+   if ( diceValue == 2) {
+    return <FontAwesome5 name="dice-two" size={54} color="#fdfffc"/>
+   }
+
+   if ( diceValue == 3) {
+    return <FontAwesome5 name="dice-three" size={54} color="#fdfffc" />
+   }
+
+   if ( diceValue == 4) {
+    return <FontAwesome5 name="dice-four" size={54} color="#fdfffc" />
+   }
+
+   if ( diceValue == 5) {
+    return <FontAwesome5 name="dice-five" size={54} color="#fdfffc" />
+   }
+
+
+   if ( diceValue == 6) {
+    return <FontAwesome5 name="dice-six" size={54} color="#fdfffc" />
+   }
+
+  };
+
+  // const handleRedGotiPress = (row, col) => {
+  //   if (diceValue === 6 && isRedGotiTargetCell(row, col)) {
+  //     setTappedRedGoti({ row, col });
+  //     putRedGoti(6,1)
+
+  //   }
+  // };
+  //svg goti
+const isRedGotiTargetCell = (row, col) => {
+  return (row === 2 && col === 2) || (row === 2 && col === 4) || (row === 4 && col === 2) || (row === 4 && col === 4);
+};
+
+const renderRedGotiSvgIcon = (row, col) => {
+  if (isRedGotiTargetCell(row, col)) {
+    return (
+      diceValue === 6 ? <ReadyRed></ReadyRed> :<RedGoti></RedGoti>
+
+  
+  //  <TouchableOpacity onPress={() => handleRedGotiPress(row, col)}>
+  //        {diceValue === 6 && tappedRedGoti?.row === row && tappedRedGoti?.col === col ? null : <RedGoti />}
+  //      </TouchableOpacity> 
+  
+  
+     
+    )
+  }
+  // return null;
+};
+
+// const putRedGoti =(row, col)=>{
+//   if ( row === 6 && col === 1 ){
+//     return <View><RedGoti></RedGoti></View>
+//   }
+// }
+
+// const renderRedGotiSvgIcon = (row, col) => {
+
+
+//   if (isRedGotiTargetCell(row, col)) {
+//     return ( 
+//     diceValue === 6 ?<ReadyRed></ReadyRed>  :  <RedGoti></RedGoti> 
+    
+//     );
+//   }
+//   return null;
+// };
+
+const isGreenGotiTargetCell = (row, col) => {
+  return (row === 2 && col === 11) || (row === 2 && col === 13) || (row === 4 && col === 11) || (row === 4 && col === 13);
+};
+
+const renderGreenGotiSvgIcon = (row, col) => {
+  if (isGreenGotiTargetCell(row, col)) {
+    return (
+    <GreenGoti></GreenGoti>
+    );
+  }
+  return null;
+};
+
+
+const isYellowGotiTargetCell = (row, col) => {
+  return (row === 11 && col === 11) || (row === 11 && col === 13) || (row === 13 && col === 11) || (row === 13 && col === 13);
+};
+
+const renderYellowGotiSvgIcon = (row, col) => {
+  if (isYellowGotiTargetCell(row, col)) {
+    return (
+   <YellowGoti></YellowGoti>
+    );
+  }
+  return null;
+};
+
+
+const isBlueGotiTargetCell = (row, col) => {
+  return (row === 11 && col === 2) || (row === 11 && col === 4) || (row === 13 && col === 2) || (row === 13 && col === 4);
+};
+
+const renderBlueGotiSvgIcon = (row, col) => {
+  if (isBlueGotiTargetCell(row, col)) {
+    return (
+        <BlueGoti></BlueGoti>
+    );
+  }
+  return null;
+};
 
   return (
 
     <View style={{flex:1, backgroundColor:"white"}}>
     
-
-
-
       <ImageBackground source={require("../assets/bj.png")} style={{ flex: 1 }}>
 
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -147,6 +322,13 @@ const LudoBoard = () => {
                     {renderYellowGotiSvgIcon(rowIndex + 1 , colIndex + 1 )}
 
                     {renderBlueGotiSvgIcon(rowIndex + 1 , colIndex + 1 )}
+                      
+
+               
+                 
+                 
+
+                
 
                   </View>
 
@@ -168,7 +350,8 @@ const LudoBoard = () => {
 
 <View style={styles.redGotiBox}>
 
-  <RedGoti></RedGoti>
+<RedGoti></RedGoti>
+
 </View>
 <View style={styles.greenGotiBox}>
   <GreenGoti></GreenGoti>
@@ -182,12 +365,30 @@ const LudoBoard = () => {
 
 
         <View style={styles.redDice}>
-          <TouchableOpacity style={styles.diceBtn1}>
-            {/* <MaterialCommunityIcons name="dice-1" size={49} color="#fdfffc" /> */}
-            <TouchableOpacity onPress={rollDice} style={styles.dice}>
-          {renderDiceDots()}
+          <View style={styles.diceBtn1}>
+          <Animated.View
+        style={[
+          
+          {
+            transform: [{ rotate: rollingRotation }],
+          },
+        ]}
+      >
+        <TouchableOpacity onPress={rollDice}>{renderDiceIcons()}</TouchableOpacity>
+      </Animated.View>
+       
+          {/* <Animatable.View
+           
+        animation={rolling ? 'rotate' : null}
+        easing="linear"
+        duration={rolling ? 1000 : 0} 
+        onAnimationEnd={() => setRolling(false)}
+      >
+            <TouchableOpacity onPress={rollDice} >
+            {renderDiceIcons()}
       </TouchableOpacity>
-            </TouchableOpacity>
+         </Animatable.View> */}
+            </View>
 
         </View>
 
@@ -205,73 +406,6 @@ const LudoBoard = () => {
 
 
 
-{/* <View style={{width:76, height:75, position:"absolute", top:"45%", left:"40%"}}>
-
-  <View style={{width: 0,
-    height: 0,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderLeftWidth: 38,
-    borderRightWidth: 39,
-    borderBottomWidth: 38,
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "#ec1d27",
-    transform: [{ rotate: "90deg" }],
-    top:20,
-    left:-18
-   }}>
-  </View>
-
-  <View style={{width: 0,
-    height: 0,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderLeftWidth: 38,
-    borderRightWidth: 39,
-    borderBottomWidth: 38,
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "#ffe01b",
-    transform: [{ rotate: "-90deg" }],
-    top:-20,
-    right:-19
-   }}>
-  </View>
-
-  <View style={{width: 0,
-    height: 0,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderLeftWidth: 38,
-    borderRightWidth: 40 ,
-    borderBottomWidth: 38,
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "#29b6f6",
-    // transform: [{ rotate: "0deg" }],
-    top:-38,
-    left:0
-   }}>
-  </View>
-
-  <View style={{width: 0,
-    height: 0,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderLeftWidth: 38,
-    borderRightWidth: 37,
-    borderBottomWidth: 38,
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "#01A147",
-    transform: [{ rotate: "-180deg" }],
-    top:-113.3,
-    left:1
-   }}>
-  </View>
-
-</View> */}
 
 
  </ImageBackground>
@@ -282,9 +416,6 @@ const LudoBoard = () => {
 
 
     </View>
-
-
-
 
 
   );
@@ -502,61 +633,10 @@ const renderHomeText = (row, col) => {
 };
 
 
-//svg goti
-const isRedGotiTargetCell = (row, col) => {
-  return (row === 2 && col === 2) || (row === 2 && col === 4) || (row === 4 && col === 2) || (row === 4 && col === 4);
-};
-
-const renderRedGotiSvgIcon = (row, col) => {
-  if (isRedGotiTargetCell(row, col)) {
-    return (
-     <RedGoti></RedGoti>
-    );
-  }
-  return null;
-};
 
 
-const isGreenGotiTargetCell = (row, col) => {
-  return (row === 2 && col === 11) || (row === 2 && col === 13) || (row === 4 && col === 11) || (row === 4 && col === 13);
-};
-
-const renderGreenGotiSvgIcon = (row, col) => {
-  if (isGreenGotiTargetCell(row, col)) {
-    return (
-     <GreenGoti></GreenGoti>
-    );
-  }
-  return null;
-};
 
 
-const isYellowGotiTargetCell = (row, col) => {
-  return (row === 11 && col === 11) || (row === 11 && col === 13) || (row === 13 && col === 11) || (row === 13 && col === 13);
-};
-
-const renderYellowGotiSvgIcon = (row, col) => {
-  if (isYellowGotiTargetCell(row, col)) {
-    return (
-     <YellowGoti></YellowGoti>
-    );
-  }
-  return null;
-};
-
-
-const isBlueGotiTargetCell = (row, col) => {
-  return (row === 11 && col === 2) || (row === 11 && col === 4) || (row === 13 && col === 2) || (row === 13 && col === 4);
-};
-
-const renderBlueGotiSvgIcon = (row, col) => {
-  if (isBlueGotiTargetCell(row, col)) {
-    return (
-     <BlueGoti></BlueGoti>
-    );
-  }
-  return null;
-};
 
 // homebox design
 const isHomeTargetCell = (row, col) => {
@@ -825,19 +905,23 @@ dice: {
   alignItems:"center",
   gap:5,
   padding:9,
-  justifyContent:"center"
+  justifyContent:"center",
+  position:"absolute"
   
 },
 
 dot: {
-  width: 9.2,
-  height: 9.2,
+  width: 7.5,
+  height: 7.5,
   backgroundColor: 'black',
   borderRadius: 7.5,
+ marginTop:5
+ 
   // margin:5
   
 
 },
+
 
 
 
@@ -896,3 +980,5 @@ export default LudoBoard;
 
 
 // how to create when user touch the dice it roll the dice and give some random no. between 1 to 6
+
+//  if the dice value is 6 then put the listener on these cell (2,2), (2,4), (4,2), (4,4) if user  touch the cell 

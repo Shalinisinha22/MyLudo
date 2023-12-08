@@ -4,7 +4,7 @@ import React from 'react'
 const HomeComponent = () => {
   return (
 
- <View style={{left:25.5, top:54}}>
+ <View style={{left:25, top:54.5}}>
  <View style={{width: 0,
   height: 0,
   backgroundColor: "transparent",

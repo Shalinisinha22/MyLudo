@@ -1,6 +1,7 @@
 import { View, Text, SafeAreaView, StatusBar, Platform } from 'react-native'
 import React from 'react'
 import My from './components/LudoBoard';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 const App = () => {
@@ -19,7 +20,9 @@ const App = () => {
           barStyle={"dark-content"}
           translucent={false}
         />
-    <My></My>
+           <My></My>
+       
+
    
     
     </SafeAreaView>
