@@ -2,7 +2,7 @@ import * as React from "react"
 import Svg, { Defs, LinearGradient, Stop, Path } from "react-native-svg"
 import { View } from "react-native"
 import * as Animatable from 'react-native-animatable';
-const ReadyRed = (props) => (
+const ReadyGreen = (props) => (
 
     <Animatable.View 
     style={{height:66, width:66, paddingLeft:25}}
@@ -238,4 +238,4 @@ const ReadyRed = (props) => (
   </Svg>
   </Animatable.View>
 )
-export default ReadyRed
+export default ReadyGreen

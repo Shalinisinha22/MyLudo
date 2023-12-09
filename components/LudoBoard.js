@@ -1,26 +1,34 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, Text, ImageBackground, SafeAreaView, TouchableOpacity, Image, Platform, StatusBar, Animated } from 'react-native';
 import Svg, { Polygon } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Arrow from './Svg/Arrow';
+import Arrow from './Svg/Arrow1';
 import RedGoti from './Svg/RedGoti';
 import GreenGoti from './Svg/GreenGoti';
 import YellowGoti from './Svg/YellowGoti';
 import BlueGoti from './Svg/BlueGoti';
 import HomeComponent from './HomeComponent';
-// import * as Animatable from 'react-native-animatable';
 import { Audio } from 'expo-av';
 import ReadyRed from './Svg/ReadyRed';
-import SvgComponent from './Svg/ReadyRed';
+import ReadyGreen from './Svg/ReadyGreen';
+import ReadyYellow from './Svg/ReadyYellow';
+import ReadyBlue from './Svg/ReadyBlue';
+import Arrow1 from './Svg/Arrow1';
+import Arrow2 from './Svg/Arrow2';
+import Arrow3 from './Svg/Arrow3';
+
+
 
 
 
 const LudoBoard = () => {
   const numRows = 15;
   const numCols = 15;
+  const [isIconMoved, setIconMoved] = useState(false);
+  const [iconPosition, setIconPosition] = useState({ row: 2, col: 2 });
 
   const [diceValue, setDiceValue] = useState(1);
   const rollingValue = useRef(new Animated.Value(0)).current;
@@ -31,13 +39,31 @@ const LudoBoard = () => {
   const diceRef = useRef(null);
   const rollingSound = useRef(new Audio.Sound());
 
- 
+
+  const [playersInfo, setPlayerInfo] = useState("red")
+
+  const isRedMark = (row, col) => {
+    if (row === 6 && col === 1) {
+      return <ReadyRed></ReadyRed>
+    }
+  }
+
+  const handleIconPress = () => {
+    if (!isIconMoved) {
+      setIconMoved(true);
+      // You can add any other logic you need before moving the icon
+
+      // Move the icon to the new cell (6, 1)
+      setIconPosition({ row: 6, col: 1 });
+    }
+  };
+
 
   useEffect(() => {
     loadSound();
 
     return () => {
- 
+
       unloadSound();
     };
   }, []);
@@ -79,8 +105,7 @@ const LudoBoard = () => {
 
     // setRolling(false);
 
-    const randomValue = Math.floor(Math.random() * 6) + 1;
-    setDiceValue(randomValue);
+  
 
     rollingValue.setValue(0);
     Animated.timing(rollingValue, {
@@ -88,9 +113,143 @@ const LudoBoard = () => {
       duration: 1000,
       useNativeDriver: false,
     }).start();
+
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    const randomValue = Math.floor(Math.random() * 6) + 1;
+    setDiceValue(randomValue);
+    moveIcon(randomValue);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    if (randomValue === 6) {
+
+      setPlayerInfo("red")
+    }
+    else {
+      setPlayerInfo("green")
+    }
+
   };
 
+
+  const moveIcon = (steps) => {
+    setIconMoved(true);
+
+    // Calculate the new position based on the steps
+    let newRow = iconPosition.row;
+    let newCol = iconPosition.col + steps;
+
+    // Update the column and handle when the token reaches the end of the row
+    if (newCol > 4) {
+      newRow = newRow + 1;
+      newCol = newCol - 4;
+    }
+
+    // Move the icon to the new position
+    setIconPosition({ row: newRow, col: newCol });
+  };
+
+
+  const rollDiceGreen = async () => {
+
+    try {
+      await rollingSound.current.replayAsync();
+    } catch (error) {
+      console.error('Failed to play the sound', error);
+    }
+
  
+    rollingValue.setValue(0);
+    Animated.timing(rollingValue, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    const randomValue = Math.floor(Math.random() * 6) + 1;
+    setDiceValue(randomValue);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    if (randomValue === 6) {
+
+      setPlayerInfo("green")
+    }
+    else {
+      setPlayerInfo("yellow")
+    }
+
+  };
+
+
+  const rollDiceYellow = async () => {
+
+    try {
+      await rollingSound.current.replayAsync();
+    } catch (error) {
+      console.error('Failed to play the sound', error);
+    }
+
+
+
+ 
+    rollingValue.setValue(0);
+    Animated.timing(rollingValue, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+
+   
+
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    const randomValue = Math.floor(Math.random() * 6) + 1;
+    setDiceValue(randomValue);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    if (randomValue === 6) {
+
+      setPlayerInfo("yellow")
+    }
+    else {
+      setPlayerInfo("blue")
+    }
+
+};
+
+  const rollDiceBlue = async () => {
+    console.log(playersInfo)
+    try {
+      await rollingSound.current.replayAsync();
+    } catch (error) {
+      console.error('Failed to play the sound', error);
+    }
+
+    
+    rollingValue.setValue(0);
+
+    Animated.timing(rollingValue, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+
+  
+
+   
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    const randomValue = Math.floor(Math.random() * 6) + 1;
+    setDiceValue(randomValue);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    if (randomValue === 6) {
+
+      setPlayerInfo("blue")
+    }
+    else {
+      setPlayerInfo("red")
+    }
+
+  };
+
+
   const rollingRotation = rollingValue.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '360deg'],
@@ -98,30 +257,30 @@ const LudoBoard = () => {
 
   const renderDiceIcons = () => {
     console.log(diceValue)
-   if ( diceValue == 1) {
-    return <FontAwesome5 name="dice-one" size={54} color="#fdfffc"/>
-   }
+    if (diceValue == 1) {
+      return <FontAwesome5 name="dice-one" size={54} color="#fdfffc" />
+    }
 
-   if ( diceValue == 2) {
-    return <FontAwesome5 name="dice-two" size={54} color="#fdfffc"/>
-   }
+    if (diceValue == 2) {
+      return <FontAwesome5 name="dice-two" size={54} color="#fdfffc" />
+    }
 
-   if ( diceValue == 3) {
-    return <FontAwesome5 name="dice-three" size={54} color="#fdfffc" />
-   }
+    if (diceValue == 3) {
+      return <FontAwesome5 name="dice-three" size={54} color="#fdfffc" />
+    }
 
-   if ( diceValue == 4) {
-    return <FontAwesome5 name="dice-four" size={54} color="#fdfffc" />
-   }
+    if (diceValue == 4) {
+      return <FontAwesome5 name="dice-four" size={54} color="#fdfffc" />
+    }
 
-   if ( diceValue == 5) {
-    return <FontAwesome5 name="dice-five" size={54} color="#fdfffc" />
-   }
+    if (diceValue == 5) {
+      return <FontAwesome5 name="dice-five" size={54} color="#fdfffc" />
+    }
 
 
-   if ( diceValue == 6) {
-    return <FontAwesome5 name="dice-six" size={54} color="#fdfffc" />
-   }
+    if (diceValue == 6) {
+      return <FontAwesome5 name="dice-six" size={54} color="#fdfffc" />
+    }
 
   };
 
@@ -133,94 +292,124 @@ const LudoBoard = () => {
   //   }
   // };
   //svg goti
-const isRedGotiTargetCell = (row, col) => {
-  return (row === 2 && col === 2) || (row === 2 && col === 4) || (row === 4 && col === 2) || (row === 4 && col === 4);
-};
+  const isRedGotiTargetCell = (row, col) => {
+    return (row === 2 && col === 2) || (row === 2 && col === 4) || (row === 4 && col === 2) || (row === 4 && col === 4);
+  };
 
-const renderRedGotiSvgIcon = (row, col) => {
-  if (isRedGotiTargetCell(row, col)) {
-    return (
-      diceValue === 6 ? <ReadyRed></ReadyRed> :<RedGoti></RedGoti>
+
+  const renderRedGotiSvgIcon = (row, col) => {
+   // Check if the current cell is a valid target cell for the RedGoti
+  const isValidTargetCell = isRedGotiTargetCell(row, col);
+
+  // Check if the RedGoti should be rendered in the current cell
+  const shouldRenderRedGoti =
+    isValidTargetCell   || (isIconMoved && row === iconPosition.row && col === iconPosition.col);;
 
   
-  //  <TouchableOpacity onPress={() => handleRedGotiPress(row, col)}>
-  //        {diceValue === 6 && tappedRedGoti?.row === row && tappedRedGoti?.col === col ? null : <RedGoti />}
-  //      </TouchableOpacity> 
-  
-  
-     
-    )
-  }
-  // return null;
-};
 
-// const putRedGoti =(row, col)=>{
-//   if ( row === 6 && col === 1 ){
-//     return <View><RedGoti></RedGoti></View>
-//   }
-// }
-
-// const renderRedGotiSvgIcon = (row, col) => {
-
-
-//   if (isRedGotiTargetCell(row, col)) {
-//     return ( 
-//     diceValue === 6 ?<ReadyRed></ReadyRed>  :  <RedGoti></RedGoti> 
-    
-//     );
-//   }
-//   return null;
-// };
-
-const isGreenGotiTargetCell = (row, col) => {
-  return (row === 2 && col === 11) || (row === 2 && col === 13) || (row === 4 && col === 11) || (row === 4 && col === 13);
-};
-
-const renderGreenGotiSvgIcon = (row, col) => {
-  if (isGreenGotiTargetCell(row, col)) {
+  if (shouldRenderRedGoti) {
     return (
-    <GreenGoti></GreenGoti>
+      <RedGoti
+        key={{ row, col }}
+        player={playersInfo}
+        value={diceValue}
+        onPress={handleIconPress}
+        isMoved={isIconMoved}
+      />
     );
   }
+
   return null;
-};
+  };
+  // const renderRedGotiSvgIcon = (row, col) => {
+  //   if (isRedGotiTargetCell(row, col)) {
+  //     return (
+
+  //         <RedGoti key={{row,col}} player ={playersInfo} value = {diceValue} ></RedGoti>
+            
+
+  //       //  <TouchableOpacity onPress={() => handleRedGotiPress(row, col)}>
+  //       //        {diceValue === 6 && tappedRedGoti?.row === row && tappedRedGoti?.col === col ? null : <RedGoti />}
+  //       //      </TouchableOpacity> 
 
 
-const isYellowGotiTargetCell = (row, col) => {
-  return (row === 11 && col === 11) || (row === 11 && col === 13) || (row === 13 && col === 11) || (row === 13 && col === 13);
-};
 
-const renderYellowGotiSvgIcon = (row, col) => {
-  if (isYellowGotiTargetCell(row, col)) {
-    return (
-   <YellowGoti></YellowGoti>
-    );
-  }
-  return null;
-};
+  //     )
+  //   }
+  //   // return null;
+  // };
+
+  // const putRedGoti =(row, col)=>{
+  //   if ( row === 6 && col === 1 ){
+  //     return <View><RedGoti></RedGoti></View>
+  //   }
+  // }
+
+  // const renderRedGotiSvgIcon = (row, col) => {
 
 
-const isBlueGotiTargetCell = (row, col) => {
-  return (row === 11 && col === 2) || (row === 11 && col === 4) || (row === 13 && col === 2) || (row === 13 && col === 4);
-};
+  //   if (isRedGotiTargetCell(row, col)) {
+  //     return ( 
+  //     diceValue === 6 ?<ReadyRed></ReadyRed>  :  <RedGoti></RedGoti> 
 
-const renderBlueGotiSvgIcon = (row, col) => {
-  if (isBlueGotiTargetCell(row, col)) {
-    return (
-        <BlueGoti></BlueGoti>
-    );
-  }
-  return null;
-};
+  //     );
+  //   }
+  //   return null;
+  // };
+
+  const isGreenGotiTargetCell = (row, col) => {
+    return (row === 2 && col === 11) || (row === 2 && col === 13) || (row === 4 && col === 11) || (row === 4 && col === 13);
+  };
+
+  const renderGreenGotiSvgIcon = (row, col) => {
+    if (isGreenGotiTargetCell(row, col)) {
+      return (
+         <GreenGoti player ={playersInfo} value = {diceValue}></GreenGoti>
+      );
+    }
+    return null;
+  };
+
+
+  const isYellowGotiTargetCell = (row, col) => {
+    return (row === 11 && col === 11) || (row === 11 && col === 13) || (row === 13 && col === 11) || (row === 13 && col === 13);
+  };
+
+  const renderYellowGotiSvgIcon = (row, col) => {
+    if (isYellowGotiTargetCell(row, col)) {
+      return (
+    <YellowGoti player ={playersInfo} value = {diceValue}></YellowGoti>
+      );
+    }
+    return null;
+  };
+
+
+  const isBlueGotiTargetCell = (row, col) => {
+    return (row === 11 && col === 2) || (row === 11 && col === 4) || (row === 13 && col === 2) || (row === 13 && col === 4);
+  };
+
+  const renderBlueGotiSvgIcon = (row, col) => {
+    if (isBlueGotiTargetCell(row, col)) {
+      return (
+       <BlueGoti player = {playersInfo} value = {diceValue}></BlueGoti>
+      );
+    }
+    return null;
+  };
+
+ 
+
+
 
   return (
 
-    <View style={{flex:1, backgroundColor:"white"}}>
-    
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+
       <ImageBackground source={require("../assets/bj.png")} style={{ flex: 1 }}>
 
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-   
+
           <View style={styles.gridContainer}>
 
             {Array.from({ length: numRows }).map((_, rowIndex) => (
@@ -231,13 +420,14 @@ const renderBlueGotiSvgIcon = (row, col) => {
                     style={[
                       styles.gridCell,
                       isStarCell(rowIndex, colIndex) && styles.starCell,
+                      
                       { backgroundColor: isCellColored(rowIndex, colIndex) },
                       removeInnerCellGrid(rowIndex, colIndex) ? styles.removeGrid
-                      : null,
-                  
+                        : null,
+
                       isCellInRange6(rowIndex, colIndex) ? styles.red
                         : null,
-                        isCell(rowIndex , colIndex) && styles.demo,
+                
                       isCellInRange9(rowIndex, colIndex) ? styles.green
                         : null,
                       isCellInRange7(rowIndex, colIndex) ? styles.blue
@@ -250,7 +440,7 @@ const renderBlueGotiSvgIcon = (row, col) => {
                         : null,
 
                       ,
-                  
+
 
                     ]}
                   >
@@ -313,22 +503,27 @@ const renderBlueGotiSvgIcon = (row, col) => {
                     {/* {renderHomeText(rowIndex, colIndex)} */}
 
 
-                   { renderHomeComponent(rowIndex , colIndex)}
+                    {renderHomeComponent(rowIndex, colIndex)}
 
-                    {renderRedGotiSvgIcon(rowIndex + 1 , colIndex + 1 )}
+                    {renderRedGotiSvgIcon(rowIndex + 1, colIndex + 1)}
 
-                    {renderGreenGotiSvgIcon(rowIndex + 1 , colIndex + 1 )}
+                    {renderGreenGotiSvgIcon(rowIndex + 1, colIndex + 1)}
 
-                    {renderYellowGotiSvgIcon(rowIndex + 1 , colIndex + 1 )}
+                    {renderYellowGotiSvgIcon(rowIndex + 1, colIndex + 1)}
 
-                    {renderBlueGotiSvgIcon(rowIndex + 1 , colIndex + 1 )}
-                      
+                    {renderBlueGotiSvgIcon(rowIndex + 1, colIndex + 1)}
 
-               
-                 
-                 
+{
+  isRedMark(rowIndex + 1, colIndex + 1)
+}
 
-                
+
+                    
+
+
+
+
+
 
                   </View>
 
@@ -345,39 +540,51 @@ const renderBlueGotiSvgIcon = (row, col) => {
 
         </View>
 
-<Arrow></Arrow>
+        {/* <Arrow></Arrow> */}
 
 
-<View style={styles.redGotiBox}>
+        <View style={styles.redGotiBox}>
 
-<RedGoti></RedGoti>
+          <RedGoti></RedGoti>
 
-</View>
-<View style={styles.greenGotiBox}>
-  <GreenGoti></GreenGoti>
-</View>
-<View style={styles.blueGotiBox}>
-  <BlueGoti></BlueGoti>
-</View>
-<View style={styles.yellowGotiBox}>
-  <YellowGoti></YellowGoti>
-</View>
+        </View>
+        <View style={styles.greenGotiBox}>
+          <GreenGoti></GreenGoti>
+        </View>
+        <View style={styles.blueGotiBox}>
+          <BlueGoti></BlueGoti>
+        </View>
+        <View style={styles.yellowGotiBox}>
+          <YellowGoti></YellowGoti>
+        </View>
 
 
         <View style={styles.redDice}>
           <View style={styles.diceBtn1}>
-          <Animated.View
-        style={[
-          
-          {
-            transform: [{ rotate: rollingRotation }],
-          },
-        ]}
-      >
-        <TouchableOpacity onPress={rollDice}>{renderDiceIcons()}</TouchableOpacity>
-      </Animated.View>
-       
-          {/* <Animatable.View
+
+            {playersInfo == "red" && 
+            
+            <Animated.View
+
+            // animation={rolling ? 'rotate' : null}
+            // easing="linear"
+            // duration={rolling ? 1000 : 0} 
+            // onAnimationEnd={() => setRolling(false)}
+
+
+              style={[
+
+                {
+                  transform: [{ rotate: rollingRotation }],
+                },
+              ]}
+           
+            >
+           <TouchableOpacity onPress={rollDice}>{renderDiceIcons()}</TouchableOpacity>
+          </Animated.View>}
+
+
+            {/* <Animatable.View
            
         animation={rolling ? 'rotate' : null}
         easing="linear"
@@ -388,18 +595,80 @@ const renderBlueGotiSvgIcon = (row, col) => {
             {renderDiceIcons()}
       </TouchableOpacity>
          </Animatable.View> */}
-            </View>
+          </View>
+
+          {
+            playersInfo === "red"  && <Arrow1></Arrow1>
+          }   
 
         </View>
 
 
 
-        <View style={styles.greenDice}><TouchableOpacity style={styles.diceBtn2}></TouchableOpacity></View>
+        <View style={styles.greenDice}>
+
+          <View style={styles.diceBtn2}>
+
+            {playersInfo == "green" && <Animated.View
+              style={[
+
+                {
+                  transform: [{ rotate: rollingRotation }],
+                },
+              ]}
+            >
+              <TouchableOpacity onPress={rollDiceGreen}>{renderDiceIcons()}</TouchableOpacity>
+            </Animated.View>}
+          </View>
+          {
+            playersInfo === "green"  && <Arrow3></Arrow3>
+          }   
+          </View>
+
         <View style={styles.blueDice}>
-          <TouchableOpacity style={styles.diceBtn3}></TouchableOpacity>
+          <View style={styles.diceBtn3}>
+
+            {playersInfo == "blue" &&
+              <Animated.View
+                style={[
+
+                  {
+                    transform: [{ rotate: rollingRotation }],
+                  },
+                ]}
+              >
+                <TouchableOpacity onPress={rollDiceBlue}>{renderDiceIcons()}</TouchableOpacity>
+              </Animated.View>
+              
+              }
+          </View>
+
+          {
+            playersInfo === "blue"  && <Arrow1></Arrow1>
+          } 
         </View>
+
+
+
         <View style={styles.yellowDice}>
-          <TouchableOpacity style={styles.diceBtn4}></TouchableOpacity>
+          <View style={styles.diceBtn4}>
+            {playersInfo == "yellow" && 
+            
+            <Animated.View
+              style={[
+
+                {
+                  transform: [{ rotate: rollingRotation }],
+                },
+              ]}
+            >
+              <TouchableOpacity onPress={rollDiceYellow}>{renderDiceIcons()}</TouchableOpacity>
+            </Animated.View>}
+          </View>
+
+          {
+            playersInfo === "yellow"  && <Arrow3></Arrow3>
+          }
         </View>
 
 
@@ -408,9 +677,15 @@ const renderBlueGotiSvgIcon = (row, col) => {
 
 
 
- </ImageBackground>
 
-   
+
+
+
+
+
+      </ImageBackground>
+
+
 
 
 
@@ -466,7 +741,6 @@ const removeInnerCellGrid = (row, col) => {
     return true;
   }
 };
-
 
 
 
@@ -640,24 +914,22 @@ const renderHomeText = (row, col) => {
 
 // homebox design
 const isHomeTargetCell = (row, col) => {
-  return (row === 6 && col === 6) 
+  return (row === 6 && col === 6)
 };
 
 const renderHomeComponent = (row, col) => {
   if (isHomeTargetCell(row, col)) {
     return (
-   <HomeComponent></HomeComponent>
-   
+      <HomeComponent></HomeComponent>
+
     );
   }
   return null;
 };
 
-const isCell = (row,col) =>{
-  if (row === 5 && col === 0) {
-    return true;
-  }
-}
+
+
+
 
 
 
@@ -668,14 +940,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: "white",
-  
+    zIndex:0
+
   },
   gridRow: {
     flexDirection: 'row',
-    borderWidth:0,
+    borderWidth: 0,
 
 
-   
+
   },
   gridCell: {
     width: 25,
@@ -684,27 +957,29 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     justifyContent: "center",
     alignItems: "center",
-    aspectRatio: 1,
+    // aspectRatio: 1,
+    zIndex:0
     // borderWidth: 1,
-  
+
 
   },
   // highlightedCell: {
   //   backgroundColor: '#ffe01b', // Change the background color as needed
   // },
   removeGrid: {
-    borderWidth: 0, 
-    borderBottomWidth:0,
-    borderTopWidth:0,
-    borderLeftWidth:0,
-    borderRightWidth:0 
+    borderWidth: 0,
+    borderBottomWidth: 0,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0
   },
 
   red: {
     backgroundColor: '#ec1d27',
     borderColor: "#ec1d27",
-    
-    
+    zIndex:0
+
+
   },
   green: {
     backgroundColor: '#01A147',
@@ -721,7 +996,8 @@ const styles = StyleSheet.create({
   },
 
   starCell: {
-    backgroundColor: 'lightgray', // Background color for star cells
+    backgroundColor: 'lightgray', 
+    zIndex:0// Background color for star cells
   },
 
   circle: {
@@ -734,7 +1010,7 @@ const styles = StyleSheet.create({
     left: 12,
     marginTop: 1,
   },
-  redGotiBox:{
+  redGotiBox: {
     height: 55,
     width: 62,
     backgroundColor: "#6da6c0",
@@ -746,9 +1022,9 @@ const styles = StyleSheet.create({
     borderColor: "#f9e7b0",
     borderWidth: 1,
     borderRadius: 8,
-    paddingRight:20
+    paddingRight: 20
   },
- greenGotiBox:{
+  greenGotiBox: {
     height: 55,
     width: 62,
     backgroundColor: "#6da6c0",
@@ -759,39 +1035,39 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderColor: "#f9e7b0",
     borderWidth: 1,
-    borderRadius: 8 ,
-    paddingRight:20
+    borderRadius: 8,
+    paddingRight: 20
   },
 
 
-  yellowGotiBox:{
+  yellowGotiBox: {
     height: 55,
     width: 62,
     backgroundColor: "#6da6c0",
     position: "absolute",
-    bottom: 115,
+    bottom: 107,
     right: 28,
     alignItems: "center",
     justifyContent: "center",
     borderColor: "#f9e7b0",
     borderWidth: 1,
-    borderRadius: 8 ,
-    paddingRight:20
+    borderRadius: 8,
+    paddingRight: 20
   },
 
-  blueGotiBox:{
+  blueGotiBox: {
     height: 55,
     width: 62,
     backgroundColor: "#6da6c0",
     position: "absolute",
-    bottom: 115,
+    bottom: 107,
     left: 24,
     alignItems: "center",
     justifyContent: "center",
     borderColor: "#f9e7b0",
     borderWidth: 1,
-    borderRadius: 8 ,
-    paddingRight:20
+    borderRadius: 8,
+    paddingRight: 20
   },
 
 
@@ -821,11 +1097,11 @@ const styles = StyleSheet.create({
 
 
   greenDice: {
-    height: 65,
-    width: 65,
+    height: 75,
+    width: 75,
     backgroundColor: "#6da6c0",
     position: "absolute",
-    top: 105,
+    top: 100,
     right: 78,
     alignItems: "center",
     justifyContent: "center",
@@ -835,19 +1111,19 @@ const styles = StyleSheet.create({
   },
 
   diceBtn2: {
-    height: 55,
-    width: 55,
+    height: 65,
+    width: 65,
     backgroundColor: "#ffc3c3",
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center"
   },
-blueDice: {
-    height: 65,
-    width: 65,
+  blueDice: {
+    height: 75,
+    width: 75,
     backgroundColor: "#6da6c0",
     position: "absolute",
-    bottom: 110,
+    bottom: 100,
     left: 78,
     alignItems: "center",
     justifyContent: "center",
@@ -857,8 +1133,8 @@ blueDice: {
   },
 
   diceBtn3: {
-    height: 55,
-    width: 55,
+    height: 65,
+    width: 65,
     backgroundColor: "#ffc3c3",
     borderRadius: 10,
     alignItems: "center",
@@ -866,11 +1142,11 @@ blueDice: {
   },
 
   yellowDice: {
-    height: 65,
-    width: 65,
+    height: 75,
+    width: 75,
     backgroundColor: "#6da6c0",
     position: "absolute",
-    bottom: 110,
+    bottom: 100,
     right: 78,
     alignItems: "center",
     justifyContent: "center",
@@ -880,47 +1156,47 @@ blueDice: {
   },
 
   diceBtn4: {
-    height: 55,
-    width: 55,
+    height: 65,
+    width: 65,
     backgroundColor: "#ffc3c3",
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center"
   },
 
- demo:{
-  borderColor:"#ec1d27",
-  borderWidth:1,
-  
- },
-dice: {
+  demo: {
+    borderColor: "#ec1d27",
+    borderWidth: 1,
+
+  },
+  dice: {
     height: 55,
     width: 55,
-   justifyContent: 'center',
-  alignItems: 'center',
-  borderRadius: 10,
-  backgroundColor: "#fdfffc",
-  flexDirection:"row",
-  flexWrap:"wrap",
-  alignItems:"center",
-  gap:5,
-  padding:9,
-  justifyContent:"center",
-  position:"absolute"
-  
-},
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: "#fdfffc",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: 5,
+    padding: 9,
+    justifyContent: "center",
+    position: "absolute"
 
-dot: {
-  width: 7.5,
-  height: 7.5,
-  backgroundColor: 'black',
-  borderRadius: 7.5,
- marginTop:5
- 
-  // margin:5
-  
+  },
 
-},
+  dot: {
+    width: 7.5,
+    height: 7.5,
+    backgroundColor: 'black',
+    borderRadius: 7.5,
+    marginTop: 5
+
+    // margin:5
+
+
+  },
 
 
 

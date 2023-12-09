@@ -69,7 +69,8 @@ const HomeComponent = () => {
  }}>
 </View>
 
-</View> 
+ </View> 
+
 
 
   )

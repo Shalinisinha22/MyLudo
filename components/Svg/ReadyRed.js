@@ -4,16 +4,19 @@ import { View } from "react-native"
 import * as Animatable from 'react-native-animatable';
 const ReadyRed = (props) => (
 
-    <Animatable.View 
-    style={{height:66, width:66, paddingLeft:25}}
-     animation="fadeIn"// Specify the animation name
-    easing="ease-in-out"
-    iterationCount="infinite"
-    duration={1000} // Animation duration in milliseconds
-  >
+
+
+   
+  <View 
+    style={{height:46, width:46, transform: [{ rotate: "-90deg" }], zIndex:1000, left:30, top:15}}
+    //  animation="fadeIn"// Specify the animation name
+    // easing="ease-in-out"
+    // iterationCount="infinite"
+    // duration={1000} // Animation duration in milliseconds
 
     
-<Svg
+   >
+   <Svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
     x="0%"
@@ -21,6 +24,7 @@ const ReadyRed = (props) => (
     className="redpiece"
     viewBox="0 0 25 24"
     {...props}
+    
   >
     <Defs>
       <LinearGradient
@@ -235,7 +239,8 @@ const ReadyRed = (props) => (
       strokeWidth={0.901}
       d="M11.92 2.7c2.25 0 4.07 1.82 4.07 4.07s-1.82 4.08-4.07 4.08-4.07-1.83-4.07-4.08S9.67 2.7 11.92 2.7z"
     />
-  </Svg>
-  </Animatable.View>
+   </Svg>
+
+  </View>
 )
 export default ReadyRed
