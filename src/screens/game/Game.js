@@ -20,13 +20,14 @@ export default class Game extends Component{
         const {redName,blueName,yellowName,greenName} = props;
         this.rollingSound = new Audio.Sound();
         this.rollingValue = new Animated.Value(0);
+        this.onDiceRoll = this.onDiceRoll.bind(this);
         this.state={
             red:this.initPlayer(RED,red),
             yellow:this.initPlayer(YELLOW,yellow),
             green:this.initPlayer(GREEN,green),
             blue:this.initPlayer(BLUE,blue),
             isRolling: false,
-            diceNumber: 4,
+            diceNumber: 1,
             moves:[],
             bonusCount: 0,
             animateForSelection:false,
@@ -73,49 +74,49 @@ export default class Game extends Component{
         }
       }
 
-      rollDice = async () => {
+    //   rollDice = async () => {
        
     
-        try {
-          await this.rollingSound.replayAsync();
-        } catch (error) {
-          console.error('Failed to play the sound', error);
-        }
+    //     try {
+    //       await this.rollingSound.replayAsync();
+    //     } catch (error) {
+    //       console.error('Failed to play the sound', error);
+    //     }
     
-        this.rollingValue.setValue(0);
-        Animated.timing(this.rollingValue, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: false,
-        }).start();
+    //     this.rollingValue.setValue(0);
+    //     Animated.timing(this.rollingValue, {
+    //       toValue: 1,
+    //       duration: 1000,
+    //       useNativeDriver: false,
+    //     }).start();
     
-        await new Promise(resolve => setTimeout(resolve, 1500));
+    //     await new Promise(resolve => setTimeout(resolve, 1500));
     
-        const randomValue = Math.floor(Math.random() * 6) + 1;
-        this.setState({ diceValue: randomValue });
+    //     const randomValue = Math.floor(Math.random() * 6) + 1;
+    //     this.setState({ diceValue: randomValue });
     
-        await new Promise(resolve => setTimeout(resolve, 1500));
+    //     await new Promise(resolve => setTimeout(resolve, 1500));
     
      
-      };
+    //   };
 
 
 
       renderDiceIcons() {
-        const { diceValue } = this.state;
-        console.log(diceValue)
+        const { diceNumber } = this.state;
+       console.log(diceNumber)
     
-        if (diceValue === 1) {
+        if (diceNumber === 1) {
           return <FontAwesome5 name="dice-one" size={54} color="#fdfffc" />
-        } else if (diceValue === 2) {
+        } else if (diceNumber === 2) {
           return  <FontAwesome5 name="dice-two" size={54} color="#fdfffc" />
-        } else if (diceValue === 3) {
+        } else if (diceNumber === 3) {
           return  <FontAwesome5 name="dice-three" size={54} color="#fdfffc" />
-        } else if (diceValue === 4) {
+        } else if (diceNumber === 4) {
           return <FontAwesome5 name="dice-four" size={54} color="#fdfffc" />
-        } else if (diceValue === 5) {
+        } else if (diceNumber === 5) {
           return  <FontAwesome5 name="dice-five" size={54} color="#fdfffc" />
-        } else if (diceValue === 6) {
+        } else if (diceNumber === 6) {
           return <FontAwesome5 name="dice-six" size={54} color="#fdfffc" />
         }
     
@@ -214,7 +215,8 @@ export default class Game extends Component{
 
 <View style={styles.diceBtn1}>
 
-  {/* <Animated.View
+{this.state.turn == RED && 
+  <Animated.View
     style={[
 
       {
@@ -222,18 +224,65 @@ export default class Game extends Component{
       },
     ]}
   >
-    <TouchableOpacity onPress={this.rollDice}>{this.renderDiceIcons()}</TouchableOpacity>
-  </Animated.View> */}
+    <TouchableOpacity onPress={this.onDiceRoll}>{this.renderDiceIcons()}</TouchableOpacity>
+  </Animated.View>
+    }
 </View>
 
 </View>
 
-<View style={styles.yellowDice}><TouchableOpacity style={styles.diceBtn2}></TouchableOpacity></View>
+<View style={styles.yellowDice}>
+    
+<View style={styles.diceBtn2}>
+
+{this.state.turn == YELLOW && 
+  <Animated.View
+    style={[
+
+      {
+        transform: [{ rotate: this.state.rollingRotation }],
+      },
+    ]}
+  >
+    <TouchableOpacity onPress={this.onDiceRoll}>{this.renderDiceIcons()}</TouchableOpacity>
+  </Animated.View>
+    }
+</View>
+
+</View>
 <View style={styles.blueDice}>
-<TouchableOpacity style={styles.diceBtn3}></TouchableOpacity>
+<View style={styles.diceBtn3}>
+
+{this.state.turn == BLUE && 
+  <Animated.View
+    style={[
+
+      {
+        transform: [{ rotate: this.state.rollingRotation }],
+      },
+    ]}
+  >
+    <TouchableOpacity onPress={this.onDiceRoll}>{this.renderDiceIcons()}</TouchableOpacity>
+  </Animated.View>
+    }
+</View>
 </View>
 <View style={styles.greenDice}>
-<TouchableOpacity style={styles.diceBtn4}></TouchableOpacity>
+<View style={styles.diceBtn1}>
+
+{this.state.turn == GREEN && 
+  <Animated.View
+    style={[
+
+      {
+        transform: [{ rotate: this.state.rollingRotation }],
+      },
+    ]}
+  >
+    <TouchableOpacity onPress={this.onDiceRoll}>{this.renderDiceIcons()}</TouchableOpacity>
+  </Animated.View>
+    }
+</View>
 </View>
 
                 <View style={styles.gameContainer}>
@@ -269,21 +318,21 @@ export default class Game extends Component{
     }
 
   async  onDiceRoll(){
+
+
     try {
-        await this.rollingSound.replayAsync();
+        if (this.rollingSound) {
+          await this.rollingSound.replayAsync();
+        } else {
+          console.error('Sound object is not properly initialized');
+        }
       } catch (error) {
         console.error('Failed to play the sound', error);
       }
-  
-      this.rollingValue.setValue(0);
-      Animated.timing(this.rollingValue, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: false,
-      }).start();
-  
-      await new Promise(resolve => setTimeout(resolve, 1500));
-  
+     
+
+   
+     
         const { diceRollTestDataIndex ,diceRollTestData, animateForSelection} =this.state;
         if(animateForSelection){
             return;
@@ -292,6 +341,18 @@ export default class Game extends Component{
         if(updatedDiceRollTestDataIndex>=diceRollTestData.length){
             updatedDiceRollTestDataIndex = 0;
         }
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        this.rollingValue.setValue(0);
+        Animated.timing(this.rollingValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: false,
+        }).start();
+    
+     
+        await new Promise(resolve => setTimeout(resolve, 1500));
+       
         this.setState({isRolling:true,diceNumber:this.getRandomInt(),diceRollTestDataIndex:updatedDiceRollTestDataIndex})
         setTimeout(()=>{
             const { moves, diceNumber, turn } = this.state;
@@ -309,6 +370,8 @@ export default class Game extends Component{
             }
             
         },100)
+
+      
     }
 
     isPlayerFinished(player){
@@ -783,7 +846,7 @@ const styles = StyleSheet.create({
     gameContainer:{
         width:Dimensions.get('screen').width,
         height:Dimensions.get('screen').width,
-        borderWidth:1,
+       
         // borderColor:'#999',
         // borderRadius:20,
         elevation:5,

@@ -216,7 +216,7 @@ export default Dice = ({isRolling,turn,onDiceRoll,diceNumber, rollingRotation}) 
           ></View>
 </View>
 
-<Animated.View
+{/* <Animated.View
     style={[
         styles.textStyle,
     
@@ -227,7 +227,7 @@ export default Dice = ({isRolling,turn,onDiceRoll,diceNumber, rollingRotation}) 
     ]}
   >
     <TouchableOpacity onPress={onDiceRoll}>{renderDiceSurface(diceNumber)}</TouchableOpacity>
-  </Animated.View>
+  </Animated.View> */}
       
             {/* <Text style={styles.textStyle}>Roll Dice</Text> */}
             {/* <TouchableOpacity style={[styles.container,{backgroundColor:color}]} onPress={onDiceRoll}>

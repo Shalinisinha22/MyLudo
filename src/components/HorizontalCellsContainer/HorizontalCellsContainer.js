@@ -49,9 +49,9 @@ export default HorizontalCellsContainer = ({
   onPieceSelection,
 }) => {
 
-    {
-        console.log(state)
-    }
+    // {
+    //     console.log(state)
+    // }
   const renderEmptySpace = () => {
     return (
       <View style={{ flex: 3 }}>
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   cellContainer: {
     flex: 1,
-    borderColor: "#000",
+    borderColor: "black",
     borderWidth: 1,
   },
 });
