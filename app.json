@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Ludo",
-    "slug": "Ludo",
+    "slug": "ludo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,15 +22,16 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.shalinisinha2.Ludo"
+      "package": "com.shalinisinha.Ludo"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "4339d28e-b11b-4b78-a075-04fe06e723af"
+        "projectId": "1cf93598-a443-4bc8-b168-7b00f920d286"
       }
-    }
+    },
+    "owner": "shalinisinha"
   }
 }

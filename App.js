@@ -6,33 +6,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TimerScreen from './Screens/TimerScreen';
 import LudoBoard from './components/LudoBoard';
+import App1 from './src/App';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
   return (
 
-    <NavigationContainer>
-      <SafeAreaView
-
-        style={{
-          paddinTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-          flex: 1,
-          backgroundColor: "white",
-
-        }}
-      >
-        <StatusBar
-          backgroundColor={"white"}
-          barStyle={"dark-content"}
-          translucent={false}
-         />
-        <Stack.Navigator>
-          <Stack.Screen name="LoadingScreen" component={TimerScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="LudoBoard" component={LudoBoard} options={{ headerShown: false }} />
-        </Stack.Navigator>
-
-      </SafeAreaView>  
-    </NavigationContainer>
+  <App1></App1>
 
 
 

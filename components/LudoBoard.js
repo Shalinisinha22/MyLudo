@@ -48,15 +48,15 @@ const LudoBoard = () => {
     }
   }
 
-  const handleIconPress = () => {
-    if (!isIconMoved) {
-      setIconMoved(true);
-      // You can add any other logic you need before moving the icon
+  // const handleIconPress = () => {
+  //   if (!isIconMoved) {
+  //     setIconMoved(true);
+  //     // You can add any other logic you need before moving the icon
 
-      // Move the icon to the new cell (6, 1)
-      setIconPosition({ row: 6, col: 1 });
-    }
-  };
+  //     // Move the icon to the new cell (6, 1)
+  //     setIconPosition({ row: 6, col: 1 });
+  //   }
+  // };
 
 
   useEffect(() => {
@@ -117,7 +117,7 @@ const LudoBoard = () => {
     await new Promise(resolve => setTimeout(resolve, 1500));
     const randomValue = Math.floor(Math.random() * 6) + 1;
     setDiceValue(randomValue);
-    moveIcon(randomValue);
+    // moveIcon(randomValue);
     await new Promise(resolve => setTimeout(resolve, 1500));
     if (randomValue === 6) {
 
@@ -130,22 +130,22 @@ const LudoBoard = () => {
   };
 
 
-  const moveIcon = (steps) => {
-    setIconMoved(true);
+  // const moveIcon = (steps) => {
+  //   setIconMoved(true);
 
-    // Calculate the new position based on the steps
-    let newRow = iconPosition.row;
-    let newCol = iconPosition.col + steps;
+  //   // Calculate the new position based on the steps
+  //   let newRow = iconPosition.row;
+  //   let newCol = iconPosition.col + steps;
 
-    // Update the column and handle when the token reaches the end of the row
-    if (newCol > 4) {
-      newRow = newRow + 1;
-      newCol = newCol - 4;
-    }
+  //   // Update the column and handle when the token reaches the end of the row
+  //   if (newCol > 4) {
+  //     newRow = newRow + 1;
+  //     newCol = newCol - 4;
+  //   }
 
-    // Move the icon to the new position
-    setIconPosition({ row: newRow, col: newCol });
-  };
+  //   // Move the icon to the new position
+  //   setIconPosition({ row: newRow, col: newCol });
+  // };
 
 
   const rollDiceGreen = async () => {
@@ -313,8 +313,7 @@ const LudoBoard = () => {
         key={{ row, col }}
         player={playersInfo}
         value={diceValue}
-        onPress={handleIconPress}
-        isMoved={isIconMoved}
+       
       />
     );
   }
@@ -446,7 +445,7 @@ const LudoBoard = () => {
                   >
 
 
-                    <Text style={{ width: "23", height: "25", justifyContent: "center", alignItems: "center" }}> {isStarCell(rowIndex, colIndex) && (
+                    <Text style={{ width: "23", height: "25", justifyContent: "center", alignItems: "center" ,zIndex:0}}> {isStarCell(rowIndex, colIndex) && (
                       <Ionicons name="star" size={14} color="white" />
                     )}</Text>
 
@@ -609,7 +608,8 @@ const LudoBoard = () => {
 
           <View style={styles.diceBtn2}>
 
-            {playersInfo == "green" && <Animated.View
+            {playersInfo == "green" && 
+            <Animated.View
               style={[
 
                 {

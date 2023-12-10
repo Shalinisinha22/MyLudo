@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native'
 
 const TimerScreen = ({navigation}) => {
     const {height, width} = Dimensions.get("screen")
-    const [count, setCount] = useState(5)
+    const [count, setCount] = useState(2)
 
     useEffect(()=>{
         if (count <= 0){
@@ -13,7 +13,7 @@ const TimerScreen = ({navigation}) => {
         else{
             setTimeout(()=>{
                 setCount(count - 1)
-            },2000)
+            },5000)
         }
       
     })
